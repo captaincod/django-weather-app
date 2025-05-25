@@ -23,7 +23,7 @@
     {% endif %}
 
     {% if weather %}
-        <p>{{ weather }}</p>
+        <p>{{ weather | safe }}</p>
     {% endif %}
 
 </body>
