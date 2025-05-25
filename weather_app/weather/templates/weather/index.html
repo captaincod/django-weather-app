@@ -7,7 +7,24 @@
     {% bootstrap_css %}
     {% bootstrap_javascript %}
 </head>
-<body>
-    <h1>Узнайте погоду в своём городе</h1>
+<body class="mx-5">
+    <h1 class="mt-5">Узнайте погоду в своём городе</h1>
+    <form method="post" class="mt-4">
+        <div class="form-group my-1">
+            {% csrf_token %}
+            <label>{{ form.city.label }}</label>
+            {{ form.city }}
+        </div>
+        <button class="btn btn-primary mt-1" type="submit">Получить прогноз</button>
+    </form>
+
+    {% if error %}
+        <p class="alert alert-danger mt-4">{{ error }}</p>
+    {% endif %}
+
+    {% if weather %}
+        <p>{{ weather }}</p>
+    {% endif %}
+
 </body>
 </html>
