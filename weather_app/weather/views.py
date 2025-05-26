@@ -22,8 +22,6 @@ def index(request):
 
     if request.method == 'POST':
         form = CityForm(request.POST)
-        # cities = City.objects.values_list('name', flat=True).distinct()
-
         if form.is_valid():
             city_name = form.cleaned_data['city']
             try:
@@ -42,5 +40,4 @@ def index(request):
         'form': form,
         'weather_plots': weather_plots,
         'error': error
-        # 'cities': cities,
     })

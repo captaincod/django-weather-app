@@ -38,4 +38,4 @@ def visualize_weather_df_html(df: pd.DataFrame) -> list[str]:
     ax.grid(True)
     html_images.append(fig_to_base64_img(fig))
 
-    return html_images
+    return "".join(html_images)

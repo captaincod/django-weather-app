@@ -1,0 +1,19 @@
+.autocomplete-list div {
+    padding: 4px;
+    cursor: pointer;
+}
+.autocomplete-list div:hover {
+    background-color: #f0f0f0;
+}
+
+.hidden {
+    display: none;
+}
+
+.form-select.no-arrow {
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    background-image: none;
+    padding-right: 10px;
+}
