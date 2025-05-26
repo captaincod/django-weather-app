@@ -6,7 +6,7 @@ from .get_weather_table import get_weather_dataframe
 from .visualize_weather import visualize_weather_df_html
 
 def index(request):
-    weather_data = None
+    weather_plots = None
     error = None
 
     if request.method == 'POST':
@@ -16,16 +16,10 @@ def index(request):
         if form.is_valid():
             city_name = form.cleaned_data['city']
             try:
-                city = City.objects.filter(name__regex=city_name)[0]
-                url = f"https://api.open-meteo.com/v1/forecast?latitude={city.latitude}&longitude={city.longitude}&daily=uv_index_max&hourly=rain,snowfall,temperature_2m,relative_humidity_2m&timezone=auto"
-                response = requests.get(url)
-                if response.status_code == 200:
-                    # weather_data = response.json()
-                    # TODO: обработка исключений
-                    data = get_weather_dataframe(city.latitude, city.longitude)
-                    weather_data = visualize_weather_df_html(data)
-                else:
-                    error = "Город не найден."
+                city = City.objects.filter(name__iregex=city_name)[0]
+                # TODO: обработка исключений
+                data = get_weather_dataframe(city.latitude, city.longitude)
+                weather_plots = visualize_weather_df_html(data)
             except IndexError:
                 error = f"Город '{city_name}' не найден в базе данных."
     else:
@@ -33,7 +27,7 @@ def index(request):
 
     return render(request, 'weather/index.html', {
         'form': form,
-        'weather': weather_data,
+        'weather_plots': weather_plots,
         'error': error
         # 'cities': cities,
     })
