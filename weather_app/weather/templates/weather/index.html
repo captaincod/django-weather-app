@@ -6,25 +6,66 @@
     {% load bootstrap5 %}
     {% bootstrap_css %}
     {% bootstrap_javascript %}
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'weather/style.css' %}">
 </head>
 <body class="mx-5">
     <h1 class="mt-5">Узнайте погоду в своём городе</h1>
     <form method="post" class="mt-4">
-        <div class="form-group my-1">
+        <div class="my-1">
             {% csrf_token %}
-            <label>{{ form.city.label }}</label>
-            {{ form.city }}
+            {{ form.city.label_tag }} {{ form.city }}
+            <div id="suggestions" class="autocomplete-list"></div>
+            <button class="btn btn-primary mt-1" type="submit">Получить прогноз</button>
         </div>
-        <button class="btn btn-primary mt-1" type="submit">Получить прогноз</button>
     </form>
 
     {% if error %}
         <p class="alert alert-danger mt-4">{{ error }}</p>
     {% endif %}
 
+    {% if city %}
+        <p class="fs-2">Погода в городе: {{ city }}</p>
+    {% endif %}
+
     {% if weather_plots %}
         <p>{{ weather_plots | safe }}</p>
     {% endif %}
 
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const input = document.getElementById('city');
+            const suggestionsBox = document.getElementById('suggestions');
+        
+            input.addEventListener('input', async () => {
+                const query = input.value.trim();
+                if (query.length < 2) {
+                    suggestionsBox.innerHTML = '';
+                    return;
+                }
+        
+                const response = await fetch(`/autocomplete/?q=${encodeURIComponent(query)}`);
+                const data = await response.json();
+        
+                suggestionsBox.innerHTML = '';
+                data.results.forEach(city => {
+                    const div = document.createElement('div');
+                    div.textContent = city;
+                    div.addEventListener('click', () => {
+                        input.value = city;
+                        suggestionsBox.innerHTML = '';
+                    });
+                    suggestionsBox.appendChild(div);
+                });
+            });
+        
+            document.addEventListener('click', (e) => {
+                if (!suggestionsBox.contains(e.target) && e.target !== input) {
+                    suggestionsBox.innerHTML = '';
+                }
+            });
+        });
+    </script>     
 </body>
 </html>
