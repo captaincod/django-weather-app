@@ -1,0 +1,20 @@
+version: "3.9"
+
+services:
+  web:
+    build: .
+    container_name: weather-app-docker
+    ports:
+      - "8000:8000"
+    volumes:
+      - static_volume:/static
+      - init_flag:/init
+    env_file:
+      - .env
+    environment:
+      SECRET_KEY: ${SECRET_KEY}
+      DEBUG: ${DEBUG}
+
+volumes:
+  static_volume:
+  init_flag:
