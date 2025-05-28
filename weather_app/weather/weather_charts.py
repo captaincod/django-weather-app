@@ -4,7 +4,7 @@ import matplotlib.pyplot as plt
 from io import BytesIO
 import base64
 
-def visualize_weather_df_html(df: pd.DataFrame) -> list[str]:
+def weather_to_charts(df: pd.DataFrame) -> list[str]:
     matplotlib.use('agg')
     df = df.copy()
     df['date'] = pd.to_datetime(df['date'])
@@ -12,7 +12,6 @@ def visualize_weather_df_html(df: pd.DataFrame) -> list[str]:
     html_images = []
 
     def fig_to_base64_img(fig) -> str:
-        """Преобразует matplotlib.figure.Figure в base64 <img> строку."""
         buf = BytesIO()
         fig.savefig(buf, format='png', bbox_inches='tight')
         plt.close(fig)

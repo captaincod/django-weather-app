@@ -1,8 +1,9 @@
 from django.shortcuts import render
 from .forms import CityForm
 from .models import City
-from .get_weather_table import get_weather_dataframe
-from .visualize_weather import visualize_weather_df_html
+from .get_weather import get_weather_dataframe
+from .current_weather import get_current_weather
+from .weather_charts import weather_to_charts
 from django.http import JsonResponse
 from django.views.decorators.http import require_GET
 from weather.models import City
@@ -16,9 +17,11 @@ def autocomplete_city(request):
     return JsonResponse({'results': []})
 
 def index(request):
-    weather_plots = None
-    error = ""
     city = ""
+    cur_temp = None
+    cur_humid = None
+    weather_charts = None
+    error = ""
 
     if request.method == 'POST':
         form = CityForm(request.POST)
@@ -29,15 +32,20 @@ def index(request):
                 print(list(City.objects.filter(name__iregex=city_name)))
                 # TODO: обработка исключений
                 data = get_weather_dataframe(city.latitude, city.longitude)
-                weather_plots = visualize_weather_df_html(data)
+                cur_weather = get_current_weather(data)
+                cur_temp = int(cur_weather['temperature'])
+                cur_humid = int(cur_weather['humidity'])
+                weather_charts = weather_to_charts(data)
             except IndexError:
                 error = f"Город '{city_name}' не найден в базе данных."
     else:
         form = CityForm()
 
     return render(request, 'weather/index.html', {
-        'city': city,
         'form': form,
-        'weather_plots': weather_plots,
+        'city': city,
+        'temperature': cur_temp,
+        'humidity': cur_humid,
+        'weather_charts': weather_charts,
         'error': error
     })
