@@ -18,6 +18,7 @@
 - **[Open-meteo](https://open-meteo.com/)** - API для погоды
 - **Docker** - запуск приложения
 - **Bootstrap** - стили
+- **[Flaticon](https://www.flaticon.com/packs/meteorology)** - иконки
 - Список городов России для БД взят [по ссылке](https://github.com/hflabs/city)
 
 ## Как запустить с помощью Docker
